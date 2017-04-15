@@ -1,3 +1,4 @@
+package HW4_Skeleton;
 /**
  * The main class that handles the entire network
  * Has multiple attributes each with its own use

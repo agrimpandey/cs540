@@ -1,3 +1,5 @@
+package HW4_Skeleton;
+
 /**
  * Class to identfiy connections
  * between different layers.

@@ -1,3 +1,4 @@
+package HW4_Skeleton;
 import java.util.*;
 /**
  * Holds data for a particular instance.
