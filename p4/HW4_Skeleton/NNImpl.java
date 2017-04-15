@@ -123,14 +123,16 @@ public class NNImpl{
 		// update w/ newest skeleton code
 		for(int i=0; i < this.maxEpoch; i++)
 		{
-			// initialize all w_pq to 0
-			double[][] weight_hidToOut_list = 
-					new double[hiddenNodes.size()][1];
-			double[][] weight_inputToHid_list = 
-					new double[inputNodes.size()][hiddenNodes.size()];
+			
 
 			for(Instance temp_example: this.trainingSet)
 			{
+				// initialize all w_pq to 0
+				double[][] weight_hidToOut_list = 
+						new double[hiddenNodes.size()][1];
+				double[][] weight_inputToHid_list = 
+						new double[inputNodes.size()][hiddenNodes.size()];
+				
 				double O = calculateOutputForInstance(temp_example);
 				double T = temp_example.output;
 				double err = T - O;
@@ -205,7 +207,7 @@ public class NNImpl{
 		for(Instance temp_example: dataset)
 		{
 			double O = calculateOutputForInstance(temp_example);
-			double T = 0; //get max class location for instance
+			double T = temp_example.output; //get max class location for instance
 			// create private function?
 			double err = T - O;
 			total += err*err;
