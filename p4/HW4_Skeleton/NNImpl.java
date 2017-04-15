@@ -82,7 +82,7 @@ public class NNImpl{
 	node. This is your estimate of y. 
 	 */
 
-	public int calculateOutputForInstance(Instance inst)
+	public double calculateOutputForInstance(Instance inst)
 	{
 		// TODO: add code here
 
@@ -104,9 +104,11 @@ public class NNImpl{
 
 
 	/**
-	 * Trains a neural network with the parameters initialized in the constructor
-	 * The parameters are stored as attributes of this class
-	 */
+	* Trains a neural network with the parameters initialized in the constructor for the number of epochs specified in the instance variable maxEpoch.
+	* The parameters are stored as attributes of this class, namely learningRate (alpha) and trainingSet.
+	* Implement stochastic gradient descent: update the network weights using the deltas computed after each the error of each training instance is computed.
+	* An single epoch looks at each instance training set once, so you should update weights n times per epoch if you have n instances in the training set.
+	*/
 
 	public void train()
 	{
