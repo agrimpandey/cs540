@@ -10,11 +10,11 @@ import java.util.*;
 public class Node{
 	private int type=0; //0=input,1=biasToHidden,2=hidden,3=biasToOutput,4=Output
 	public ArrayList<NodeWeightPair> parents=null; //Array List that will contain the parents (including the bias node) with weights if applicable
-		 
+
 	private Double inputValue=0.0;
 	private Double outputValue=0.0; // Output value of a node: same as input value for an iput node, 1.0 for bias nodes and calculate based on Sigmoid function for hidden and output nodes
 	private Double sum=0.0; // sum of wi*xi
-	
+
 	//Create a node with a specific type
 	public Node(int type)
 	{
@@ -22,19 +22,19 @@ public class Node{
 		{
 			System.out.println("Incorrect value for node type");
 			System.exit(1);
-			
+
 		}
 		else
 		{
 			this.type=type;
 		}
-		
+
 		if (type==2 || type==4)
 		{
 			parents=new ArrayList<NodeWeightPair>();
 		}
 	}
-	
+
 	//For an input node sets the input value which will be the value of a particular attribute
 	public void setInput(Double inputValue)
 	{
@@ -43,7 +43,7 @@ public class Node{
 			this.inputValue=inputValue;
 		}
 	}
-	
+
 	/**
 	 * Calculate the output of a ReLU node.
 	 * You can assume that outputs of the parent nodes have already been calculated
@@ -52,21 +52,24 @@ public class Node{
 	 */
 	public void calculateOutput()
 	{
-		
 		if(type==2 || type==4)//Not an input or bias node
 		{
-			// TODO: add code here
+			for(NodeWeightPair temp: parents)
+			{
+				this.sum += temp.weight*temp.node.inputValue;
+			}
 		}
+		this.outputValue = (sum <= 0) ? 0 : sum;
 	}
 
 	public double getSum() {
 		return sum;
 	}
-	
+
 	//Gets the output value
 	public double getOutput()
 	{
-		
+
 		if(type==0)//Input node
 		{
 			return inputValue;
@@ -79,7 +82,7 @@ public class Node{
 		{
 			return outputValue;
 		}
-		
+
 	}
 }
 
