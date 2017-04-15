@@ -99,7 +99,7 @@ public class NNImpl{
 		}
 
 		outputNode.calculateOutput();
-		
+
 		return outputNode.getOutput();
 
 	}
@@ -119,11 +119,11 @@ public class NNImpl{
 	{
 		// TODO: add code here
 		//initialize weights to random value
-		
+
 		// update w/ newest skeleton code
 		for(int i=0; i < this.maxEpoch; i++)
 		{
-			
+
 
 			for(Instance temp_example: this.trainingSet)
 			{
@@ -132,7 +132,7 @@ public class NNImpl{
 						new double[hiddenNodes.size()][1];
 				double[][] weight_inputToHid_list = 
 						new double[inputNodes.size()][hiddenNodes.size()];
-				
+
 				double O = calculateOutputForInstance(temp_example);
 				double T = temp_example.output;
 				double err = T - O;
@@ -152,9 +152,10 @@ public class NNImpl{
 
 				//w_ij (input to hidden)
 				int input_count = 0; // inner loop
-				int hiden_count = 0; // outer loop
 				for(Node input_temp : this.inputNodes)
 				{
+					int hiden_count = 0; // outer loop
+
 					double a_i = input_temp.getOutput();
 					for(Node hidden_temp: this.hiddenNodes)
 					{
@@ -162,13 +163,13 @@ public class NNImpl{
 						weight_inputToHid_list[input_count][hiden_count]
 								= this.learningRate*
 								a_i*g_p_hid*err;
-						
+
 						/*double foo = 0;
 						for(int k=0; k < weight_hidToOut_list.length; k++)
 						{
 							foo += weight_hidToOut_list[k][0];
 						}
-						*/
+						 */
 						weight_inputToHid_list[input_count][hiden_count]
 								= weight_inputToHid_list
 								[input_count][hiden_count]*foo*g_p_out;
@@ -179,19 +180,28 @@ public class NNImpl{
 				} // end of input nodes loop
 
 				// for all w_pq, update W_pq += w_pq
+				int hid = 0;
 				for(Node hidden_temp: hiddenNodes)
 				{
+					int in = 0;
 					for(NodeWeightPair par_of_hidNode: hidden_temp.parents)
 					{
-						par_of_hidNode.weight += ; 
+						par_of_hidNode.weight += 
+								weight_inputToHid_list[hid][in]; 
+						in++;
 					}
+
+					outputNode.parents.get(hid).weight += 
+							weight_hidToOut_list[hid][0];
+					hid++;
 				}
+
 
 			} // end of an instance 
 
 			// what to do here?!??!
-			
-			
+
+
 		} // end of an epoch
 
 	}
