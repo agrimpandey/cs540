@@ -58,7 +58,7 @@ public class Node{
 		{
 			for(NodeWeightPair temp: parents)
 			{
-				this.sum += temp.weight*temp.node.inputValue;
+				this.sum += temp.weight*temp.node.getOutput();
 			}
 		}
 		this.outputValue = (sum <= 0) ? 0 : sum;

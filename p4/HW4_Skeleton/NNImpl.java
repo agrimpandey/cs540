@@ -132,23 +132,25 @@ public class NNImpl{
 			for(Instance temp_example: this.trainingSet)
 			{
 				double O = calculateOutputForInstance(temp_example);
-				double T = 0; //get max class location for instance
-				// create private function?
+				double T = temp_example.output;
 				double err = T - O;
 
 				//w_jk (hidden to output)
 				double g_p_out = (outputNode.getOutput() <= 0) ? 0 : 1;
-				int count = 0; // dont zero index?
+				int count = 0;
+				int foo = 0;
 				for(Node hidden_temp: hiddenNodes)
 				{
-					weight_hidToOut_list[count][1] = this.learningRate*
+					weight_hidToOut_list[count][0] = this.learningRate*
 							hidden_temp.getOutput()*err*g_p_out;
+					foo += weight_hidToOut_list[count][0];	
+					// foo will equal summation of w_jk
 					count++;
 				}
 
 				//w_ij (input to hidden)
-				int input_count = 0;
-				int hiden_count = 0;
+				int input_count = 0; // inner loop
+				int hiden_count = 0; // outer loop
 				for(Node input_temp : this.inputNodes)
 				{
 					double a_i = input_temp.getOutput();
@@ -158,11 +160,13 @@ public class NNImpl{
 						weight_inputToHid_list[input_count][hiden_count]
 								= this.learningRate*
 								a_i*g_p_hid*err;
-						double foo = 0;
+						
+						/*double foo = 0;
 						for(int k=0; k < weight_hidToOut_list.length; k++)
 						{
-							foo += weight_hidToOut_list[k][1];
+							foo += weight_hidToOut_list[k][0];
 						}
+						*/
 						weight_inputToHid_list[input_count][hiden_count]
 								= weight_inputToHid_list
 								[input_count][hiden_count]*foo*g_p_out;
