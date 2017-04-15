@@ -1,4 +1,3 @@
-package HW4_Skeleton;
 /**
  * Class for internal organization of a Neural Network.
  * There are 5 types of nodes. Check the type attribute of the node for details
@@ -13,7 +12,9 @@ public class Node{
 	public ArrayList<NodeWeightPair> parents=null; //Array List that will contain the parents (including the bias node) with weights if applicable
 
 	private Double inputValue=0.0;
-	private Double outputValue=0.0; // Output value of a node: same as input value for an iput node, 1.0 for bias nodes and calculate based on Sigmoid function for hidden and output nodes
+	private Double outputValue=0.0; // Output value of a node: same as input 
+	// value for an input node, 1.0 for bias nodes and 
+	// //compute the ReLU of the sum of the weighted inputs to the current node 
 	private Double sum=0.0; // sum of wi*xi
 
 	//Create a node with a specific type

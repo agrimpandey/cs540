@@ -1,4 +1,3 @@
-package HW4_Skeleton;
 /**
  * The main class that handles the entire network
  * Has multiple attributes each with its own use
@@ -86,8 +85,12 @@ public class NNImpl{
 	public double calculateOutputForInstance(Instance inst)
 	{
 		// TODO: add code here
-
-		// need to set input???
+		int k =0;
+		for(Node input_temp: inputNodes)
+		{
+			input_temp.setInput(inst.attributes.get(k));
+			k++;
+		}
 
 		// set output
 		for(Node hidden_temp: hiddenNodes)
@@ -96,7 +99,8 @@ public class NNImpl{
 		}
 
 		outputNode.calculateOutput();
-		return (int)outputNode.getOutput();
+		
+		return outputNode.getOutput();
 
 	}
 
@@ -105,20 +109,21 @@ public class NNImpl{
 
 
 	/**
-	* Trains a neural network with the parameters initialized in the constructor for the number of epochs specified in the instance variable maxEpoch.
-	* The parameters are stored as attributes of this class, namely learningRate (alpha) and trainingSet.
-	* Implement stochastic gradient descent: update the network weights using the deltas computed after each the error of each training instance is computed.
-	* An single epoch looks at each instance training set once, so you should update weights n times per epoch if you have n instances in the training set.
-	*/
+	 * Trains a neural network with the parameters initialized in the constructor for the number of epochs specified in the instance variable maxEpoch.
+	 * The parameters are stored as attributes of this class, namely learningRate (alpha) and trainingSet.
+	 * Implement stochastic gradient descent: update the network weights using the deltas computed after each the error of each training instance is computed.
+	 * An single epoch looks at each instance training set once, so you should update weights n times per epoch if you have n instances in the training set.
+	 */
 
 	public void train()
 	{
 		// TODO: add code here
-
+		//initialize weights to random value
+		
 		// update w/ newest skeleton code
 		for(int i=0; i < this.maxEpoch; i++)
 		{
-			// initialize all weights to 0
+			// initialize all w_pq to 0
 			double[][] weight_hidToOut_list = 
 					new double[hiddenNodes.size()][1];
 			double[][] weight_inputToHid_list = 
@@ -168,12 +173,19 @@ public class NNImpl{
 				} // end of input nodes loop
 
 				// for all w_pq, update W_pq += w_pq
-
+				for(Node hidden_temp: hiddenNodes)
+				{
+					for(NodeWeightPair par_of_hidNode: hidden_temp.parents)
+					{
+						par_of_hidNode.weight += ; 
+					}
+				}
 
 			} // end of an instance 
 
 			// what to do here?!??!
-
+			
+			
 		} // end of an epoch
 
 	}
