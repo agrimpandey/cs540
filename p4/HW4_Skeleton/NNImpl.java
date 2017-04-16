@@ -87,20 +87,28 @@ public class NNImpl{
 		int k =0;
 		for(Node input_temp: inputNodes)
 		{
-			if((k-inst.attributes.size()) < 0)
+			//System.out.println(input_temp.getType());
+			if(input_temp.getType()==0)
 			{
 				input_temp.setInput(inst.attributes.get(k));
-				k++;
+				//System.out.println(k);
 			}
+			else{
+				input_temp.setInput(new Double(1.00));
+			}
+			k++;
 		}
 
 		// set output
+		//System.out.println(hiddenNodes.size());
 		for(Node hidden_temp: hiddenNodes)
 		{
 			hidden_temp.calculateOutput();
+			//System.out.println("type: " + hidden_temp.getType() + " out: " + hidden_temp.getOutput());
 		}
 
 		outputNode.calculateOutput();
+		//System.out.println("outputNode" + outputNode.getOutput());
 
 		return outputNode.getOutput();
 
@@ -145,16 +153,13 @@ public class NNImpl{
 					if(hiddenNode.getType()==2){
 						for(NodeWeightPair inputNode: hiddenNode.parents){
 							double a_i = inputNode.node.getOutput();
+							System.out.println("input node out: " + a_i);
 							inputNode.set_deltaw_pq(this.learningRate*
 									a_i*g_p_hid*err*hiddenNode.getOutput()*g_p_out);
 						}
 					}
 				}
-
 				// for all w_pq, update W_pq += w_pq
-				//System.out.println(hiddenNodes.size()); 6
-				//System.out.println(inputNodes.size()); 14
-
 				for(Node hiddenNode: hiddenNodes){
 					if(hiddenNode.getType()==2){
 						for(NodeWeightPair inputNode: hiddenNode.parents){
@@ -166,10 +171,8 @@ public class NNImpl{
 				{
 					hiddenNode.weight = hiddenNode.get_deltaw_pq();
 				}
-
 			} // end of an instance 
 		} // end of an epoch
-
 	}
 	/**
 	 * Returns the mean squared error of a dataset. That is, the sum of the squared error (T-O) for each instance
