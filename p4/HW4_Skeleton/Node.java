@@ -56,11 +56,13 @@ public class Node{
 	{
 		if(type==2 || type==4)//Not an input or bias node
 		{
-			for(NodeWeightPair temp: parents)
+			double temp_sum = 0.0;
+			for(NodeWeightPair p: parents)
 			{
 				//System.out.println("output" + temp.node.getOutput());
-				this.sum += temp.weight*temp.node.getOutput();
+				temp_sum += p.weight*p.node.getOutput();
 			}
+			this.sum = temp_sum;
 			this.outputValue = (this.sum <= 0) ? 0: this.sum;
 		}
 		//System.out.println("sum" + this.sum);
