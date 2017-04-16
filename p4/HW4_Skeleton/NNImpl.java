@@ -91,11 +91,12 @@ public class NNImpl{
 			if(input_temp.getType()==0)
 			{
 				input_temp.setInput(inst.attributes.get(k));
-				//System.out.println(k);
+				System.out.println("if" + k);
 			}
-			else{
-				input_temp.setInput(new Double(1.00));
-			}
+			//else{
+				//System.out.println("else" + input_temp.getType());
+				//input_temp.setInput(new Double(0));
+			//}
 			k++;
 		}
 
@@ -153,7 +154,7 @@ public class NNImpl{
 					if(hiddenNode.getType()==2){
 						for(NodeWeightPair inputNode: hiddenNode.parents){
 							double a_i = inputNode.node.getOutput();
-							System.out.println("input node out: " + a_i);
+							//System.out.println("input node out: " + a_i);
 							inputNode.set_deltaw_pq(this.learningRate*
 									a_i*g_p_hid*err*hiddenNode.getOutput()*g_p_out);
 						}
