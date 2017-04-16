@@ -84,12 +84,14 @@ public class NNImpl{
 
 	public double calculateOutputForInstance(Instance inst)
 	{
-		// TODO: add code here
 		int k =0;
 		for(Node input_temp: inputNodes)
 		{
-			input_temp.setInput(inst.attributes.get(k));
-			k++;
+			if((k-inst.attributes.size()) < 0)
+			{
+				input_temp.setInput(inst.attributes.get(k));
+				k++;
+			}
 		}
 
 		// set output
@@ -123,8 +125,6 @@ public class NNImpl{
 		// update w/ newest skeleton code
 		for(int i=0; i < this.maxEpoch; i++)
 		{
-
-
 			for(Instance temp_example: this.trainingSet)
 			{
 				// initialize all w_pq to 0
@@ -146,7 +146,6 @@ public class NNImpl{
 					weight_hidToOut_list[count][0] = this.learningRate*
 							hidden_temp.getOutput()*err*g_p_out;
 					foo += weight_hidToOut_list[count][0];	
-					// foo will equal summation of w_jk
 					count++;
 				}
 
@@ -155,25 +154,13 @@ public class NNImpl{
 				for(Node input_temp : this.inputNodes)
 				{
 					int hiden_count = 0; // outer loop
-
 					double a_i = input_temp.getOutput();
 					for(Node hidden_temp: this.hiddenNodes)
 					{
 						double g_p_hid = (hidden_temp.getOutput() <= 0) ? 0 : 1;
 						weight_inputToHid_list[input_count][hiden_count]
 								= this.learningRate*
-								a_i*g_p_hid*err;
-
-						/*double foo = 0;
-						for(int k=0; k < weight_hidToOut_list.length; k++)
-						{
-							foo += weight_hidToOut_list[k][0];
-						}
-						 */
-						weight_inputToHid_list[input_count][hiden_count]
-								= weight_inputToHid_list
-								[input_count][hiden_count]*foo*g_p_out;
-
+								a_i*g_p_hid*err*hidden_temp.getOutput()*g_p_out;
 						hiden_count++;
 					}	// end of hidden nodes loop
 					input_count++;
@@ -181,27 +168,31 @@ public class NNImpl{
 
 				// for all w_pq, update W_pq += w_pq
 				int hid = 0;
+				//System.out.println(hiddenNodes.size()); 6
+				//System.out.println(inputNodes.size()); 14
 				for(Node hidden_temp: hiddenNodes)
 				{
-					int in = 0;
-					for(NodeWeightPair par_of_hidNode: hidden_temp.parents)
+					if(hidden_temp.getType()==2)
 					{
-						par_of_hidNode.weight += 
-								weight_inputToHid_list[hid][in]; 
-						in++;
+						//System.out.println("outer" + hid);
+						int in = 0;
+						//System.out.println(hidden_temp.parents);
+						for(NodeWeightPair par_of_hidNode: hidden_temp.parents)
+						{
+							//System.out.println(weight_inputToHid_list[hid].length);
+							//System.out.println("---" + in);
+							par_of_hidNode.weight += 
+									weight_inputToHid_list[in][hid]; 
+							in++;
+						}
+
+						outputNode.parents.get(hid).weight += 
+								weight_hidToOut_list[hid][0];
 					}
 
-					outputNode.parents.get(hid).weight += 
-							weight_hidToOut_list[hid][0];
 					hid++;
 				}
-
-
 			} // end of an instance 
-
-			// what to do here?!??!
-
-
 		} // end of an epoch
 
 	}
@@ -209,7 +200,6 @@ public class NNImpl{
 	 * Returns the mean squared error of a dataset. That is, the sum of the squared error (T-O) for each instance
 	in the dataset divided by the number of instances in the dataset.
 	 */
-
 
 	public double getMeanSquaredError(List<Instance> dataset){
 		//TODO: add code here

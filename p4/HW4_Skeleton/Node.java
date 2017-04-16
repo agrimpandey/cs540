@@ -58,10 +58,13 @@ public class Node{
 		{
 			for(NodeWeightPair temp: parents)
 			{
+				//System.out.println("output" + temp.node.getOutput());
 				this.sum += temp.weight*temp.node.getOutput();
 			}
 		}
-		this.outputValue = (sum <= 0) ? 0 : sum;
+		//System.out.println("sum" + this.sum);
+		this.outputValue = (this.sum <= 0) ? 0 : this.sum;
+		//System.out.println("output" + this.outputValue);
 	}
 
 	public double getSum() {
@@ -85,6 +88,10 @@ public class Node{
 			return outputValue;
 		}
 
+	}
+	
+	public int getType(){
+		return this.type;
 	}
 }
 
