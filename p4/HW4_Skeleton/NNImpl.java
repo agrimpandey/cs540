@@ -91,7 +91,7 @@ public class NNImpl{
 			if(input_temp.getType()==0)
 			{
 				input_temp.setInput(inst.attributes.get(k));
-				System.out.println("if" + k);
+				//System.out.println("if" + k);
 			}
 			//else{
 				//System.out.println("else" + input_temp.getType());
@@ -128,10 +128,6 @@ public class NNImpl{
 
 	public void train()
 	{
-		// TODO: add code here
-		//initialize weights to random value
-
-		// update w/ newest skeleton code
 		for(int i=0; i < this.maxEpoch; i++)
 		{
 			for(Instance temp_example: this.trainingSet)
@@ -144,23 +140,35 @@ public class NNImpl{
 				double g_p_out = (outputNode.getOutput() <= 0) ? 0 : 1;
 				for(NodeWeightPair hiddenNode: outputNode.parents)
 				{
+					
+					System.out.println("LR: " + this.learningRate);
+					System.out.println("hidden Node" + hiddenNode.node.getOutput());
+					System.out.println("err" + err);
+					System.out.println("gp_out" + g_p_out);
+					
 					hiddenNode.set_deltaw_pq(this.learningRate*
 							hiddenNode.node.getOutput()*err*g_p_out);
+					//System.out.println("sadasd"+hiddenNode.get_deltaw_pq());
 				}
 
 				//w_ij (input to hidden)
 				for(Node hiddenNode: hiddenNodes){
-					double g_p_hid = (hiddenNode.getOutput() <= 0) ? 0 : 1;
+					double g_p_hid = (outputNode.getSum() <= 0) ? 0 : 1;
 					if(hiddenNode.getType()==2){
 						for(NodeWeightPair inputNode: hiddenNode.parents){
 							double a_i = inputNode.node.getOutput();
 							//System.out.println("input node out: " + a_i);
 							inputNode.set_deltaw_pq(this.learningRate*
-									a_i*g_p_hid*err*hiddenNode.getOutput()*g_p_out);
+									a_i*g_p_hid*err*outputNode.getSum()*
+									g_p_out);
 						}
 					}
 				}
 				// for all w_pq, update W_pq += w_pq
+				for(NodeWeightPair hiddenNode: outputNode.parents)
+				{
+					hiddenNode.weight = hiddenNode.get_deltaw_pq();
+				}
 				for(Node hiddenNode: hiddenNodes){
 					if(hiddenNode.getType()==2){
 						for(NodeWeightPair inputNode: hiddenNode.parents){
@@ -168,10 +176,7 @@ public class NNImpl{
 						}
 					}
 				}
-				for(NodeWeightPair hiddenNode: outputNode.parents)
-				{
-					hiddenNode.weight = hiddenNode.get_deltaw_pq();
-				}
+			
 			} // end of an instance 
 		} // end of an epoch
 	}

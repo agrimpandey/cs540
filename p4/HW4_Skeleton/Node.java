@@ -61,7 +61,7 @@ public class Node{
 				//System.out.println("output" + temp.node.getOutput());
 				this.sum += temp.weight*temp.node.getOutput();
 			}
-			this.outputValue = (this.sum <= 0) ? 0 : this.sum;
+			this.outputValue = (this.sum <= 0) ? 0: this.sum;
 		}
 		//System.out.println("sum" + this.sum);
 		//System.out.println("output" + this.outputValue);
