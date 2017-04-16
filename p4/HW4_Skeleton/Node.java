@@ -16,7 +16,7 @@ public class Node{
 	// value for an input node, 1.0 for bias nodes and 
 	// //compute the ReLU of the sum of the weighted inputs to the current node 
 	private Double sum=0.0; // sum of wi*xi
-
+	
 	//Create a node with a specific type
 	public Node(int type)
 	{
@@ -93,6 +93,7 @@ public class Node{
 	public int getType(){
 		return this.type;
 	}
+	
 }
 
 

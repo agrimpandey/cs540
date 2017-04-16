@@ -127,71 +127,46 @@ public class NNImpl{
 		{
 			for(Instance temp_example: this.trainingSet)
 			{
-				// initialize all w_pq to 0
-				double[][] weight_hidToOut_list = 
-						new double[hiddenNodes.size()][1];
-				double[][] weight_inputToHid_list = 
-						new double[inputNodes.size()][hiddenNodes.size()];
-
 				double O = calculateOutputForInstance(temp_example);
 				double T = temp_example.output;
 				double err = T - O;
 
 				//w_jk (hidden to output)
 				double g_p_out = (outputNode.getOutput() <= 0) ? 0 : 1;
-				int count = 0;
-				int foo = 0;
-				for(Node hidden_temp: hiddenNodes)
+				for(NodeWeightPair hiddenNode: outputNode.parents)
 				{
-					weight_hidToOut_list[count][0] = this.learningRate*
-							hidden_temp.getOutput()*err*g_p_out;
-					foo += weight_hidToOut_list[count][0];	
-					count++;
+					hiddenNode.set_deltaw_pq(this.learningRate*
+							hiddenNode.node.getOutput()*err*g_p_out);
 				}
 
 				//w_ij (input to hidden)
-				int input_count = 0; // inner loop
-				for(Node input_temp : this.inputNodes)
-				{
-					int hiden_count = 0; // outer loop
-					double a_i = input_temp.getOutput();
-					for(Node hidden_temp: this.hiddenNodes)
-					{
-						double g_p_hid = (hidden_temp.getOutput() <= 0) ? 0 : 1;
-						weight_inputToHid_list[input_count][hiden_count]
-								= this.learningRate*
-								a_i*g_p_hid*err*hidden_temp.getOutput()*g_p_out;
-						hiden_count++;
-					}	// end of hidden nodes loop
-					input_count++;
-				} // end of input nodes loop
+				for(Node hiddenNode: hiddenNodes){
+					double g_p_hid = (hiddenNode.getOutput() <= 0) ? 0 : 1;
+					if(hiddenNode.getType()==2){
+						for(NodeWeightPair inputNode: hiddenNode.parents){
+							double a_i = inputNode.node.getOutput();
+							inputNode.set_deltaw_pq(this.learningRate*
+									a_i*g_p_hid*err*hiddenNode.getOutput()*g_p_out);
+						}
+					}
+				}
 
 				// for all w_pq, update W_pq += w_pq
-				int hid = 0;
 				//System.out.println(hiddenNodes.size()); 6
 				//System.out.println(inputNodes.size()); 14
-				for(Node hidden_temp: hiddenNodes)
-				{
-					if(hidden_temp.getType()==2)
-					{
-						//System.out.println("outer" + hid);
-						int in = 0;
-						//System.out.println(hidden_temp.parents);
-						for(NodeWeightPair par_of_hidNode: hidden_temp.parents)
-						{
-							//System.out.println(weight_inputToHid_list[hid].length);
-							//System.out.println("---" + in);
-							par_of_hidNode.weight += 
-									weight_inputToHid_list[in][hid]; 
-							in++;
+
+				for(Node hiddenNode: hiddenNodes){
+					if(hiddenNode.getType()==2){
+						for(NodeWeightPair inputNode: hiddenNode.parents){
+							inputNode.weight = inputNode.get_deltaw_pq();
 						}
-
-						outputNode.parents.get(hid).weight += 
-								weight_hidToOut_list[hid][0];
 					}
-
-					hid++;
 				}
+				for(NodeWeightPair hiddenNode: outputNode.parents)
+				{
+					hiddenNode.weight = hiddenNode.get_deltaw_pq();
+				}
+
 			} // end of an instance 
 		} // end of an epoch
 
