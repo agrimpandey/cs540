@@ -148,6 +148,7 @@ public class NNImpl{
 					 */
 					hiddenNode.set_deltaw_pq(this.learningRate*
 							hiddenNode.node.getOutput()*err*g_p_out);
+					//hiddenNode.weight += hiddenNode.get_deltaw_pq();
 					//System.out.println("sadasd"+hiddenNode.get_deltaw_pq());
 				}
 
@@ -168,6 +169,7 @@ public class NNImpl{
 									g_p_out
 
 									);
+							inputNode.weight += inputNode.get_deltaw_pq();
 						}
 					} else {
 						
