@@ -1,3 +1,6 @@
+package HW4_Skeleton;
+
+
 /**
  * The main class that handles the entire network
  * Has multiple attributes each with its own use
@@ -141,7 +144,9 @@ public class NNImpl{
 				double err = T - O;
 
 				//w_jk (hidden to output)
-				double g_p_out = (outputNode.getOutput() <= 0) ? 0 : 1;
+				double g_p_out = Math.max(outputNode.getOutput(), 0);
+				if(g_p_out > 0)
+					g_p_out=1;
 				for(NodeWeightPair hiddenNode: outputNode.parents)
 				{
 					hiddenNode.set_deltaw_pq(this.learningRate*
@@ -150,7 +155,9 @@ public class NNImpl{
 
 				//w_ij (input to hidden)
 				for(Node hiddenNode: hiddenNodes){
-					double g_p_hid = (hiddenNode.getOutput() <= 0) ? 0 : 1;
+					double g_p_hid = Math.max(hiddenNode.getOutput(), 0);
+					if(g_p_hid > 0)
+						g_p_hid=1;
 					if(hiddenNode.getType()==2){
 						for(NodeWeightPair inputNode: hiddenNode.parents){
 							double a_i = inputNode.node.getOutput();
