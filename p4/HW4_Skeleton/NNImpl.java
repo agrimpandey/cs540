@@ -138,19 +138,10 @@ public class NNImpl{
 
 				//w_jk (hidden to output)
 				double g_p_out = (outputNode.getSum() <= 0) ? 0 : 1;
-
 				for(NodeWeightPair hiddenNode: outputNode.parents)
 				{
-					/*
-					System.out.println("LR: " + this.learningRate);
-					System.out.println("hidden Node" + hiddenNode.node.getOutput());
-					System.out.println("err" + err);
-					System.out.println("gp_out" + g_p_out);
-					 */
 					hiddenNode.set_deltaw_pq(this.learningRate*
 							hiddenNode.node.getOutput()*err*g_p_out);
-					//hiddenNode.weight += hiddenNode.get_deltaw_pq();
-					//System.out.println("sadasd"+hiddenNode.get_deltaw_pq());
 				}
 
 				//w_ij (input to hidden)
@@ -161,15 +152,13 @@ public class NNImpl{
 					{
 						for(NodeWeightPair inputNode: hiddenNode.parents){
 							double a_i = inputNode.node.getOutput();
-							//System.out.println("input node out: " + a_i);
 							inputNode.set_deltaw_pq
 							(
 									this.learningRate*
-									a_i*g_p_hid*err*
+									a_i*g_p_hid*(err*
 									outputNode.parents.get(hid_count).weight*
-									g_p_out
+									g_p_out)
 									);
-							//inputNode.weight += inputNode.get_deltaw_pq();
 						}
 					} else {
 						
@@ -177,18 +166,20 @@ public class NNImpl{
 					}
 					hid_count++;
 				}
-				// for all w_pq, update W_pq += w_pq
-			
+				
+				// for all w_pq, update weights
 				for(Node hiddenNode: hiddenNodes){
 					if(hiddenNode.getType()==2){
 						for(NodeWeightPair inputNode: hiddenNode.parents){
 							inputNode.weight += inputNode.get_deltaw_pq();
+							inputNode.set_deltaw_pq(new Double (0.00));
 						}
 					}
 				}
 				for(NodeWeightPair hiddenNode: outputNode.parents)
 				{
 					hiddenNode.weight += hiddenNode.get_deltaw_pq();
+					hiddenNode.set_deltaw_pq(new Double (0.00));
 				}
 
 			} // end of an instance 
@@ -200,16 +191,14 @@ public class NNImpl{
 	 */
 
 	public double getMeanSquaredError(List<Instance> dataset){
-		//TODO: add code here
 		double total = 0;
 		for(Instance temp_example: dataset)
 		{
 			double O = calculateOutputForInstance(temp_example);
-			double T = temp_example.output; //get max class location for instance
-			// create private function?
+			double T = temp_example.output;
 			double err = T - O;
 			total += err*err;
 		}
-		return total/dataset.size(); //size can't be zero, right??
+		return total/dataset.size();
 	}
 }
