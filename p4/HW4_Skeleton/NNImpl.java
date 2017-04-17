@@ -1,6 +1,3 @@
-package HW4_Skeleton;
-
-
 /**
  * The main class that handles the entire network
  * Has multiple attributes each with its own use
@@ -140,13 +137,8 @@ public class NNImpl{
 				double err = T - O;
 
 				//w_jk (hidden to output)
-<<<<<<< HEAD
 				double g_p_out = (outputNode.getSum() <= 0) ? 0 : 1;
-=======
-				double g_p_out = Math.max(outputNode.getOutput(), 0);
-				if(g_p_out > 0)
-					g_p_out=1;
->>>>>>> origin/master
+
 				for(NodeWeightPair hiddenNode: outputNode.parents)
 				{
 					/*
@@ -164,16 +156,9 @@ public class NNImpl{
 				//w_ij (input to hidden)
 				int hid_count =0;
 				for(Node hiddenNode: hiddenNodes){
-<<<<<<< HEAD
 					double g_p_hid = (hiddenNode.getSum() <= 0) ? 0 : 1;
 					if(hiddenNode.getType()==2)
 					{
-=======
-					double g_p_hid = Math.max(hiddenNode.getOutput(), 0);
-					if(g_p_hid > 0)
-						g_p_hid=1;
-					if(hiddenNode.getType()==2){
->>>>>>> origin/master
 						for(NodeWeightPair inputNode: hiddenNode.parents){
 							double a_i = inputNode.node.getOutput();
 							//System.out.println("input node out: " + a_i);
@@ -185,7 +170,7 @@ public class NNImpl{
 									g_p_out
 
 									);
-							inputNode.weight += inputNode.get_deltaw_pq();
+							//inputNode.weight += inputNode.get_deltaw_pq();
 						}
 					} else {
 						

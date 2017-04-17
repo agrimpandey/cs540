@@ -1,4 +1,3 @@
-package HW4_Skeleton;
 /**
  * Class for internal organization of a Neural Network.
  * There are 5 types of nodes. Check the type attribute of the node for details
