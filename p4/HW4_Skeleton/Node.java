@@ -65,6 +65,7 @@ public class Node{
 			this.sum = temp_sum;
 			this.outputValue = (this.sum <= 0) ? 0: this.sum;
 		}
+		
 		//System.out.println("sum" + this.sum);
 		//System.out.println("output" + this.outputValue);
 	}

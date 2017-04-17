@@ -168,7 +168,6 @@ public class NNImpl{
 									a_i*g_p_hid*err*
 									outputNode.parents.get(hid_count).weight*
 									g_p_out
-
 									);
 							//inputNode.weight += inputNode.get_deltaw_pq();
 						}
