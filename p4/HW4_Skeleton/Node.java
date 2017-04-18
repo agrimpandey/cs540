@@ -59,15 +59,11 @@ public class Node{
 			double temp_sum = 0.0;
 			for(NodeWeightPair p: parents)
 			{
-				//System.out.println("output" + temp.node.getOutput());
 				temp_sum += p.weight*p.node.getOutput();
 			}
 			this.sum = temp_sum;
 			this.outputValue = (this.sum <= 0) ? 0: this.sum;
 		}
-		
-		//System.out.println("sum" + this.sum);
-		//System.out.println("output" + this.outputValue);
 	}
 
 	public double getSum() {

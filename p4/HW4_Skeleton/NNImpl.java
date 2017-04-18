@@ -87,30 +87,21 @@ public class NNImpl{
 		int k =0;
 		for(Node input_temp: inputNodes)
 		{
-			//System.out.println(input_temp.getType());
 			if(input_temp.getType()==0)
 			{
 				input_temp.setInput(inst.attributes.get(k));
-				//System.out.println("if" + k);
 			}
-			//else{
-			//System.out.println("else" + input_temp.getType());
-			//input_temp.setInput(new Double(0));
-			//}
 			k++;
 		}
 
 		// set output
-		//System.out.println(hiddenNodes.size());
 		for(Node hidden_temp: hiddenNodes)
 		{
 			hidden_temp.calculateOutput();
-			//System.out.println("type: " + hidden_temp.getType() + " out: " + hidden_temp.getOutput());
 		}
 
 		outputNode.calculateOutput();
-		//System.out.println("outputNode" + outputNode.getOutput());
-
+		
 		return outputNode.getOutput();
 
 	}
