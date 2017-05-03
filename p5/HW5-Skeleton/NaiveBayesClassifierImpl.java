@@ -64,13 +64,25 @@ public class NaiveBayesClassifierImpl implements NaiveBayesClassifier {
 		comedyPrior = p_l(Label.COMEDY);
 		tragedyPrior = p_l(Label.TRAGEDY);
 		historyPrior = p_l(Label.HISTORY);
-		
+
 	}
 
 	private void genreCounts(Instance tempInst, HashMap<String, Integer> gCounts){
 		for(String token: tempInst.words)
 		{
 			vocabulary.add(token);
+			if(tempInst.label == Label.COMEDY)
+			{
+				cTokenSum++;
+			}
+			else if(tempInst.label == Label.TRAGEDY)
+			{
+				tTokenSum++;
+			}
+			else if(tempInst.label == Label.HISTORY)
+			{
+				hTokenSum++;
+			}
 			if(gCounts.containsKey(token))
 			{
 				int v = gCounts.get(token);
@@ -107,22 +119,9 @@ public class NaiveBayesClassifierImpl implements NaiveBayesClassifier {
 	 */
 	public void words_per_label_count(){
 		// TODO : Implement
-
-		for(String word: tragedyCounts.keySet())
-		{
-			words_t += tragedyCounts.get(word);
-		}
-		for(String word: comedyCounts.keySet())
-		{
-			words_c += comedyCounts.get(word);
-		}
-		for(String word: historyCounts.keySet())
-		{
-			words_h += historyCounts.get(word);
-		}
-		System.out.println("" + words_c);
-		System.out.println("" + words_t);
-		System.out.println("" + words_h);
+		System.out.println("" + cTokenSum);
+		System.out.println("" + tTokenSum);
+		System.out.println("" + hTokenSum);
 
 	}
 
@@ -133,13 +132,13 @@ public class NaiveBayesClassifierImpl implements NaiveBayesClassifier {
 	public double p_l(Label label) {
 		// TODO : Implement
 		if(label==Label.COMEDY){
-			return words_c/(words_c + words_t + words_h);
+			return cTokenSum/(cTokenSum + hTokenSum + tTokenSum);
 		}
 		else if(label==Label.TRAGEDY){
-			return words_t/(words_c + words_t + words_h);
+			return tTokenSum/(cTokenSum + hTokenSum + tTokenSum);
 		}
 		else if(label==Label.HISTORY){
-			return words_h/(words_c + words_t + words_h);
+			return hTokenSum/(cTokenSum + hTokenSum + tTokenSum);
 		}
 		return 0;
 	}
@@ -193,7 +192,7 @@ public class NaiveBayesClassifierImpl implements NaiveBayesClassifier {
 		//compute the log (base e or default java log) probability of w|label for all labels (COMEDY, TRAGEDY, HISTORY)
 		//add to appropriate sum
 		//Return the Label of the maximal sum probability
-		
+
 		double prob_h = Math.log(historyPrior);
 		double prob_t = Math.log(tragedyPrior);
 		double prob_c = Math.log(comedyPrior);
@@ -206,7 +205,7 @@ public class NaiveBayesClassifierImpl implements NaiveBayesClassifier {
 		}
 
 		double maxprob = Math.max(Math.max(prob_h, prob_c), prob_t);
-		
+
 		// breaking ties
 		if(maxprob == prob_h && maxprob == prob_c && maxprob == prob_t)
 		{
@@ -250,7 +249,7 @@ public class NaiveBayesClassifierImpl implements NaiveBayesClassifier {
 			return Label.COMEDY;
 		else if(maxprob == prob_t)
 			return Label.TRAGEDY;
-		
+
 		return null; 
 	}
 
