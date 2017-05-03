@@ -107,7 +107,7 @@ public class NaiveBayesClassifierImpl implements NaiveBayesClassifier {
 			else if(instance.label==Label.TRAGEDY)
 				t_count++;
 		}
-		System.out.println(c_count + "  "  + t_count + "  " + h_count);
+		System.out.println("TRAGEDY="  + t_count + "\nCOMEDY=" + c_count + "\nHISTORY=" + h_count);
 	}
 
 	/*
@@ -116,9 +116,9 @@ public class NaiveBayesClassifierImpl implements NaiveBayesClassifier {
 	 */
 	public void words_per_label_count(){
 		// TODO : Implement
-		System.out.println("" + cTokenSum);
-		System.out.println("" + tTokenSum);
-		System.out.println("" + hTokenSum);
+		System.out.println("TRAGEDY=" + tTokenSum);
+		System.out.println("COMEDY=" + cTokenSum);
+		System.out.println("HISTORY=" + hTokenSum);
 	}
 
 	/**
@@ -189,9 +189,15 @@ public class NaiveBayesClassifierImpl implements NaiveBayesClassifier {
 		//add to appropriate sum
 		//Return the Label of the maximal sum probability
 
+		/*
 		double prob_h = Math.log(historyPrior);
 		double prob_t = Math.log(tragedyPrior);
 		double prob_c = Math.log(comedyPrior);
+		*/
+		double prob_h = 0.0;
+		double prob_t = 0.0;
+		double prob_c = 0.0;
+		
 
 		for(String w: ins.words)
 		{
@@ -203,8 +209,9 @@ public class NaiveBayesClassifierImpl implements NaiveBayesClassifier {
 		double maxprob = Math.max(Math.max(prob_h, prob_c), prob_t);
 
 		// breaking ties
+		
 		if(maxprob == prob_h && maxprob == prob_c && maxprob == prob_t)
-		{
+		{	
 			double max_priorprob = Math.max(Math.max(comedyPrior,historyPrior), 
 					tragedyPrior);
 			//no need to break ties here since test cases do not have equal 
@@ -216,6 +223,7 @@ public class NaiveBayesClassifierImpl implements NaiveBayesClassifier {
 			else if(max_priorprob == tragedyPrior)
 				return Label.TRAGEDY;
 		}
+		
 		else if(maxprob == prob_h && maxprob == prob_c)
 		{
 			if(comedyPrior >= historyPrior)
