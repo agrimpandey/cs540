@@ -33,9 +33,6 @@ public class NaiveBayesClassifierImpl implements NaiveBayesClassifier {
 
 	private ArrayList<Instance> instances = new ArrayList<Instance>();
 
-	private int words_c = 0;
-	private int words_t = 0;
-	private int words_h = 0;
 	/**
 	 * Trains the classifier with the provided training data
    Should iterate through the training instances, and, for each word in the documents, update the variables above appropriately.
@@ -44,8 +41,7 @@ public class NaiveBayesClassifierImpl implements NaiveBayesClassifier {
 	@Override
 	public void train(Instance[] trainingData) {
 		// TODO : Implement
-
-
+		
 		for(int i = 0; i< trainingData.length; i++)
 		{
 			instances.add(trainingData[i]);
@@ -64,7 +60,6 @@ public class NaiveBayesClassifierImpl implements NaiveBayesClassifier {
 		comedyPrior = p_l(Label.COMEDY);
 		tragedyPrior = p_l(Label.TRAGEDY);
 		historyPrior = p_l(Label.HISTORY);
-
 	}
 
 	private void genreCounts(Instance tempInst, HashMap<String, Integer> gCounts){
@@ -83,10 +78,12 @@ public class NaiveBayesClassifierImpl implements NaiveBayesClassifier {
 			{
 				hTokenSum++;
 			}
+			
 			if(gCounts.containsKey(token))
 			{
 				int v = gCounts.get(token);
-				gCounts.put(token,++v);
+				v++;
+				gCounts.put(token,v);
 			}else{
 				gCounts.put(token,1);
 			}
@@ -122,7 +119,6 @@ public class NaiveBayesClassifierImpl implements NaiveBayesClassifier {
 		System.out.println("" + cTokenSum);
 		System.out.println("" + tTokenSum);
 		System.out.println("" + hTokenSum);
-
 	}
 
 	/**
@@ -159,23 +155,23 @@ public class NaiveBayesClassifierImpl implements NaiveBayesClassifier {
 			if(comedyCounts.containsKey(word)){
 				numerator += comedyCounts.get(word);
 			}
-			denominator += words_c;
+			denominator += cTokenSum;
 		}
 		else if(label==Label.TRAGEDY)
 		{
 			if(tragedyCounts.containsKey(word)){
 				numerator += tragedyCounts.get(word);
 			}
-			denominator += words_t;
+			denominator += tTokenSum;
 		}			
 		else if(label==Label.HISTORY)
 		{
 			if(historyCounts.containsKey(word)){
 				numerator += historyCounts.get(word);
 			}
-			denominator += words_h;
+			denominator += hTokenSum;
 		}
-
+		//System.out.println("con" + numerator/denominator);
 		return numerator/denominator;
 	}
 
@@ -199,9 +195,9 @@ public class NaiveBayesClassifierImpl implements NaiveBayesClassifier {
 
 		for(String w: ins.words)
 		{
-			prob_h += Math.log(p_w_given_l(w, Label.COMEDY));
+			prob_h += Math.log(p_w_given_l(w, Label.HISTORY));
 			prob_t += Math.log(p_w_given_l(w, Label.TRAGEDY));
-			prob_c += Math.log(p_w_given_l(w, Label.HISTORY));
+			prob_c += Math.log(p_w_given_l(w, Label.COMEDY));
 		}
 
 		double maxprob = Math.max(Math.max(prob_h, prob_c), prob_t);
@@ -226,7 +222,6 @@ public class NaiveBayesClassifierImpl implements NaiveBayesClassifier {
 				return Label.COMEDY;
 			else
 				return Label.HISTORY;
-
 		}
 		else if(maxprob == prob_h && maxprob == prob_t)
 		{
